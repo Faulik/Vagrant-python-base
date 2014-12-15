@@ -1,4 +1,7 @@
 .idea
+project
+.vagrant
+
 *.py[co]
 
 # Packages

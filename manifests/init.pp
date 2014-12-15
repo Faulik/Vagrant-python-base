@@ -1,7 +1,7 @@
 Exec { path => "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"}
 
 # Global variables
-$user = "Faul"
+$user = "vagrant"
 $password = "1234"
 $project = "project"
 
@@ -39,3 +39,8 @@ class software {
     requre => Class["apt"]
   }
 }
+
+include apt
+include user
+include python
+include software
