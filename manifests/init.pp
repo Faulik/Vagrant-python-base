@@ -19,7 +19,7 @@ class user {
     unless => "id -u ${user}"
   }
   exec { "set password":
-    command => "echo \"${user}:${password}\" | sudo chpasswd",
+    command => "echo \'${user}:${password}\' | sudo chpasswd",
     require => Exec["add user"]
   }
   file { ["/home/${user}/venvs",
@@ -37,35 +37,34 @@ class python {
     require => Class["apt"]
   }
 
-  package { "python":
+  package { "python3":
     ensure => latest,
     require => Class["apt"]
   }
-  package { "python-dev":
+  package { "python3-dev":
     ensure => latest,
     require => Class["apt"]
   }
-  package { "python-pip":
+  package { "python3-pip":
     ensure => latest,
     require => Class["apt"]
   }
 }
 
 class virtualenv {
-  package { "virtualenv":
-    ensure => latest,
-    provider => pip,
+  exec { "pip3 install virtualenv":
+    command => "pip3 install virtualenv",
     require => Class["python"]
   }
   exec { 'create virtualenv':
-    command  => 'virtualenv env',
+    command  => 'virtualenv -p /usr/bin/python3.4 env',
     cwd => "/home/${user}/venvs",
     user => $user,
     creates => "/home/${user}/venvs/env",
-    require => Package["virtualenv"]
+    require => Exec["pip3 install virtualenv"]
   }
-  exec { "pip install deps":
-    command  => "pip install -r requirements.txt",
+  exec { "pip3 install deps":
+    command  => "pip3 install -r requirements.txt",
     onlyif => "/usr/bin/test -f /home/${user}/${project}/requirements.txt",
     cwd => "/home/${user}/${project}",
     user => $user,
