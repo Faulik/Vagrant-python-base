@@ -73,6 +73,15 @@ class virtualenv {
   }
 }
 
+class django {
+  exec { "django migrate":
+    command  => "python manage.py migrate",
+    cwd => "/home/${user}/${project}",
+    user => $user,
+    path => "/home/${user}/venvs/env/bin",
+    require => Class["virtualenv"]
+  }
+}
 class nodejs{
   package { "nodejs":
     ensure => latest,
@@ -127,6 +136,7 @@ include user
 include apt
 include python
 include virtualenv
+include django
 include nodejs
 include bower
 include software
